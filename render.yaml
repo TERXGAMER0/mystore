@@ -1,0 +1,46 @@
+# ══════════════════════════════════════════════════════
+#   render.yaml - إعدادات Render التلقائية
+#   ضع هذا الملف في جذر المشروع (نفس مستوى bot.py)
+#   Render سيقرأه تلقائياً عند الرفع من GitHub
+# ══════════════════════════════════════════════════════
+
+services:
+  - type: worker          # worker وليس web - لأن البوت لا يحتاج HTTP port
+    name: store-bot
+    runtime: python
+    plan: free            # الخطة المجانية - غيّرها إلى starter إذا أردت
+
+    # ─── مصدر الكود ──────────────────────────────────
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+
+    # ─── إعدادات Python ──────────────────────────────
+    pythonVersion: "3.12.9"
+
+    # ─── متغيرات البيئة ──────────────────────────────
+    # القيم الفعلية تُضاف من Render Dashboard > Environment
+    # لا تضع القيم الحقيقية هنا أبداً - هذا الملف سيُرفع على GitHub
+    envVars:
+      - key: BOT_TOKEN
+        sync: false       # sync: false = أدخلها يدوياً في Dashboard
+
+      - key: ADMIN_ID
+        sync: false
+
+      - key: SUPABASE_URL
+        sync: false
+
+      - key: SUPABASE_KEY
+        sync: false
+
+      - key: STORE_NAME
+        value: "🏪 متجري"     # قيمة افتراضية - يمكن تغييرها من Dashboard
+
+      - key: STORE_CURRENCY
+        value: "ريال"
+
+      - key: POINTS_PER_PURCHASE
+        value: "10"
+
+    # ─── إعادة التشغيل التلقائي ──────────────────────
+    # Render يعيد تشغيل البوت تلقائياً إذا توقف
